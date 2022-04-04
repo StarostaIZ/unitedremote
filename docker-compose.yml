@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+    links:
+      - database
+    environment:
+      DATABASE_URL: postgres://symfony:password@database:5432/malta_app?serverVersion=12&charset=utf8
+
+###> doctrine/doctrine-bundle ###
+  database:
+    image: postgres:12-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: malta_app
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: symfony
+    volumes:
+      - db-data:/var/lib/postgresql/malta_app:rw
+
+volumes:
+  db-data:
